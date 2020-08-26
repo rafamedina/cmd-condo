@@ -1,39 +1,26 @@
-(ns ^:figwheel-hooks cmd-condo.core
+(ns cmd-condo.core
   (:require
-   [goog.dom :as gdom]
-   [reagent.core :as reagent :refer [atom]]
-   [reagent.dom :as rdom]))
+   [reagent.dom :as rdom]
+   [re-frame.core :as re-frame]
+   [cmd-condo.events :as events]
+   [cmd-condo.config :as config]
+   [cmd-condo.routes :as routes]))
 
-(println "This text is printed from src/cmd_condo/core.cljs. Go ahead and edit it and see reloading in action.")
+(defn dev-setup []
+  (when config/debug?
+    (enable-console-print!)
+    (println "dev mode")))
 
-(defn multiply [a b] (* a b))
+(defn ^:dev/after-load mount-root []
+  (re-frame/clear-subscription-cache!)
+  (routes/init-routes!)
+  (let [root-el (.getElementById js/document "app")]
+    (rdom/unmount-component-at-node root-el)
+    (rdom/render [views/main-panel] root-el)))
 
-;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (atom {:text "Hello world!"}))
+(defn init []
+  (re-frame/dispatch-sync [::events/initialize-db])
+  (dev-setup)
+  (mount-root))
 
-(defn get-app-element []
-  (gdom/getElement "app"))
-
-(defn hello-world []
-  [:div
-   [:h1 (:text @app-state)]
-   [:h3 "Edit this in src/cmd_condo/core.cljs and watch it change!"]])
-
-(defn mount [el]
-  (rdom/render [hello-world] el))
-
-(defn mount-app-element []
-  (when-let [el (get-app-element)]
-    (mount el)))
-
-;; conditionally start your application based on the presence of an "app" element
-;; this is particularly helpful for testing this ns without launching the app
-(mount-app-element)
-
-;; specify reload hook with ^;after-load metadata
-(defn ^:after-load on-reload []
-  (mount-app-element)
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
-)
+(init)

@@ -8,9 +8,13 @@
 
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/clojurescript "1.10.773"]
-                 [reagent "0.10.0" ]]
+                 [reagent "0.10.0"]
+                 [re-frame "1.1.1"]
+                 [metosin/reitit "0.5.5"]]
 
-  :source-paths ["src"]
+  :source-paths ["src/cljs"]
+
+  :test-paths ["test/cljs"]
 
   :aliases {"fig"       ["trampoline" "run" "-m" "figwheel.main"]
             "fig:build" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]
@@ -19,8 +23,7 @@
 
   :profiles {:dev {:dependencies [[com.bhauman/figwheel-main "0.2.11"]
                                   [com.bhauman/rebel-readline-cljs "0.1.4"]]
-                   
+
                    :resource-paths ["target"]
                    ;; need to add the compiled assets to the :clean-targets
                    :clean-targets ^{:protect false} ["target"]}})
-

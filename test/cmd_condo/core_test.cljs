@@ -1,10 +1,7 @@
 (ns cmd-condo.core-test
-    (:require
-     [cljs.test :refer-macros [deftest is testing]]
-     [cmd-condo.core :refer [multiply]]))
+  (:require
+   [cljs.test :refer-macros [deftest is testing]]))
 
-(deftest multiply-test
-  (is (= (* 1 2) (multiply 1 2))))
-
-(deftest multiply-test-2
-  (is (= (* 75 10) (multiply 10 75))))
+((deftest fake-test
+   (testing "fake description"
+     (is (= 1 2)))))
